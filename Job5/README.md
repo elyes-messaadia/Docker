@@ -1,84 +1,83 @@
-### Étapes
+### Introduction
+Ce document guide à travers les étapes nécessaires pour configurer, construire et lancer une application web de Tic Tac Toe utilisant Docker. Le projet utilise Nginx et PHP pour servir le jeu et enregistrer les résultats des parties.
 
-1. Créer les Fichiers du Jeu
-Créez les fichiers index.html, index.php, save.php, et results.json dans un répertoire de votre choix.
+## Prérequis
 
-2. Créer le Dockerfile
-Créez un fichier nommé Dockerfile dans le même répertoire que les fichiers du jeu.
+Docker installé sur votre machine
+Connaissances de base en utilisation de Docker et en configuration de Docker Compose
+Configuration du Projet
 
-# Utiliser l'image officielle de Nginx avec PHP
+## Étape 1: Création des Fichiers du Jeu
+Créez les fichiers suivants dans votre répertoire de travail:
+
+index.html : Interface utilisateur du jeu.
+index.php : Fichier backend pour le traitement côté serveur.
+save.php : Script pour sauvegarder les résultats du jeu dans results.json.
+results.json : Fichier pour stocker les résultats du jeu.
+
+## Étape 2: Création du Dockerfile
+Structurez le Dockerfile pour utiliser Nginx avec PHP :
+
+dockerfile
+
+# Utilisation de l'image Nginx avec support PHP
 FROM nginx:alpine
 
-# Installer PHP
-RUN apk add --no-cache php8 \
-    && apk add --no-cache php8-fpm \
-    && apk add --no-cache php8-json
+# Installation de PHP et des extensions nécessaires
+RUN apk add --no-cache php8 php8-fpm php8-json
 
-# Copier les fichiers du jeu dans le répertoire web de Nginx
-COPY index.html /usr/share/nginx/html/
-COPY index.php /usr/share/nginx/html/
-COPY save.php /usr/share/nginx/html/
-COPY results.json /usr/share/nginx/html/
+# Copie des fichiers du jeu dans le répertoire de Nginx
+COPY index.html index.php save.php results.json /usr/share/nginx/html/
 
-# Configurer Nginx pour gérer les fichiers PHP
+# Ajout de la configuration Nginx pour PHP
 COPY ./nginx.conf /etc/nginx/conf.d/default.conf
 
-# Exposer le port 80
+# Exposition du port 80
 EXPOSE 80
 
-# Commande pour démarrer Nginx
+# Commande pour démarrer Nginx avec gestion de PHP
 CMD ["nginx", "-g", "daemon off;"]
 
-3. Créer le Fichier de Configuration Nginx
-Créez un fichier nginx.conf pour configurer Nginx afin de gérer les fichiers PHP :
+## Étape 3: Utilisation de Docker Compose
+Configurez docker-compose.yml pour simplifier le déploiement et la gestion du service:
 
-server {
-    listen 80;
-    server_name localhost;
+version: '3.8'
+services:
+  web:
+    build: .
+    ports:
+      - "8080:80"
+    volumes:
+      - ./html:/usr/share/nginx/html
+      - game-results:/usr/share/nginx/html/results.json
+volumes:
+  game-results:
 
-    location / {
-        root /usr/share/nginx/html;
-        index index.php index.html;
-    }
+## Étape 4: Construction de l'Image Docker
+Construisez l'image Docker à partir du Dockerfile :
 
-    location ~ \.php$ {
-        include fastcgi_params;
-        fastcgi_pass 127.0.0.1:9000;
-        fastcgi_index index.php;
-        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-    }
-}
-4. Construire l'Image Docker
-Ouvrez un terminal dans le répertoire contenant le Dockerfile et les fichiers du jeu.
-Exécutez la commande suivante pour construire l'image Docker :
+    docker build -t tic-tac-toe-game .
 
-docker build -t tic-tac-toe-game .
-5. Créer et Exécuter le Conteneur avec un Volume
-Créez et exécutez un conteneur avec un volume nommé game-results pour stocker les résultats :
+## Étape 5: Lancement du Conteneur
+Démarrez le conteneur avec le volume pour la persistance des résultats :
 
-docker run -d -p 8080:80 --name tic-tac-toe-container -v game-results:/usr/share/nginx/html tic-tac-toe-game
-6. Vérifier la Création du Volume
-Utilisez la commande suivante pour vérifier que le volume a été créé :
+    docker run -d -p 8080:80 --name tic-tac-toe-container -v game-results:/usr/share/nginx/html/results.json tic-tac-toe-game
 
-docker volume ls
-7. Afficher le Contenu du Conteneur et du Volume
-Afficher le contenu du conteneur :
+## Étape 6: Vérification et Manipulation
+Vérification du Volume :
 
-docker exec -it tic-tac-toe-container /bin/sh
-Afficher le contenu du volume :
+    docker volume ls
 
-docker run --rm -v game-results:/data alpine ls /data
-8. Afficher le Contenu de results.json
-Avec une commande :
+Affichage du Contenu du Volume :
 
-docker run --rm -v game-results:/data alpine cat /data/results.json
-Avec Docker Desktop :
-Allez dans l'onglet "Volumes" pour voir les volumes disponibles.
-Sélectionnez le volume game-results pour voir son contenu.
-9. Jouer au Jeu et Générer des Résultats
-Accédez à http://localhost:8080 dans votre navigateur pour jouer au jeu.
-Les résultats seront enregistrés dans results.json dans le volume game-results.
-10. Arrêter le Conteneur
-Utilisez la commande suivante pour arrêter le conteneur :
+    docker run --rm -v game-results:/data alpine cat /data/results.json
 
-docker stop tic-tac-toe-container
+## Étape 7: Jouer et Générer des Résultats
+
+Accédez à http://localhost:8080 pour jouer au jeu. Les résultats seront automatiquement enregistrés dans results.json.
+
+## Étape 8: Arrêt et Nettoyage
+
+Arrêtez le conteneur lorsque vous avez terminé :
+
+    docker stop tic-tac-toe-container

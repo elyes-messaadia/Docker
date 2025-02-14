@@ -1,22 +1,16 @@
-# Utiliser l'image officielle de Nginx avec PHP
+# Utiliser l'image officielle de Nginx
 FROM nginx:alpine
 
-# Installer PHP
-RUN apk add --no-cache php8 \
-    && apk add --no-cache php8-fpm \
-    && apk add --no-cache php8-json
+# Installer PHP et les extensions nécessaires
+RUN apk add --no-cache php82 php82-fpm php82-json
 
-# Copier les fichiers du jeu dans le répertoire web de Nginx
-COPY index.html /usr/share/nginx/html/
-COPY index.php /usr/share/nginx/html/
-COPY save.php /usr/share/nginx/html/
-COPY results.json /usr/share/nginx/html/
+# Copier les fichiers du jeu dans le répertoire de Nginx
+COPY index.html /usr/share/nginx/html/index.html
+COPY save.php /usr/share/nginx/html/save.php
+COPY results.json /usr/share/nginx/html/results.json
 
-# Configurer Nginx pour gérer les fichiers PHP
-COPY ./nginx.conf /etc/nginx/conf.d/default.conf
+# Créer un volume pour stocker les résultats
+VOLUME /usr/share/nginx/html
 
 # Exposer le port 80
 EXPOSE 80
-
-# Commande pour démarrer Nginx
-CMD ["nginx", "-g", "daemon off;"]

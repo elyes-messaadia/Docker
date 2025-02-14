@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tic Tac Toe</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        background-color: #f4f4f9;
+        color: #333;
+        display: flex; /* Utilisation de Flexbox */
+        flex-direction: column; /* Orientation verticale des éléments flex */
+        align-items: center; /* Centrage horizontal */
+        justify-content: center; /* Centrage vertical */
+        min-height: 100vh; /* Hauteur minimale pour prendre tout l'écran vertical */
+        margin: 0; /* Suppression des marges par défaut */
+      }
+      h1 {
+        margin: 0 0 20px 0; /* Ajustement de la marge pour le titre */
+      }
+      #gameBoard {
+        display: grid;
+        grid-template-columns: repeat(3, 100px);
+        grid-gap: 10px;
+        /* Pas besoin de marges auto ici car flexbox s'en occupe */
+      }
+      .cell {
+        width: 100px;
+        height: 100px;
+        background-color: #fff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 3em;
+        cursor: pointer;
+        border: 2px solid #333;
+        transition: background-color 0.2s;
+      }
+      .cell:hover {
+        background-color: #e0e0e0;
+      }
+      .won {
+        background-color: #d4edda;
+      }
+      button {
+        padding: 10px 20px;
+        font-size: 1em;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+      button:hover {
+        background-color: #0056b3;
+      }
+      .reset-highlight {
+        background-color: #28a745 !important;
+        box-shadow: 0px 0px 15px #28a745;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Tic Tac Toe</h1>
+    <div id="gameBoard">
+      <div class="cell" onclick="makeMove(this, 0)"></div>
+      <div class="cell" onclick="makeMove(this, 1)"></div>
+      <div class="cell" onclick="makeMove(this, 2)"></div>
+      <div class="cell" onclick="makeMove(this, 3)"></div>
+      <div class="cell" onclick="makeMove(this, 4)"></div>
+      <div class="cell" onclick="makeMove(this, 5)"></div>
+      <div class="cell" onclick="makeMove(this, 6)"></div>
+      <div class="cell" onclick="makeMove(this, 7)"></div>
+      <div class="cell" onclick="makeMove(this, 8)"></div>
+    </div>
+    <button onclick="resetGame()">Réinitialiser le jeu</button>
+
+    <script>
+      const cells = document.querySelectorAll(".cell");
+      let currentPlayer = "X";
+      let gameActive = true;
+      let gameState = Array(9).fill(null);
+
+      function makeMove(cell, index) {
+        if (gameActive && !gameState[index]) {
+          gameState[index] = currentPlayer;
+          cell.textContent = currentPlayer;
+          if (checkWinner()) {
+            endGame(currentPlayer + " a gagné !");
+          } else if (!gameState.includes(null)) {
+            endGame("Match nul !");
+          } else {
+            currentPlayer = currentPlayer === "X" ? "O" : "X";
+          }
+        }
+      }
+
+      function checkWinner() {
+        const winPatterns = [
+          [0, 1, 2],
+          [3, 4, 5],
+          [6, 7, 8],
+          [0, 3, 6],
+          [1, 4, 7],
+          [2, 5, 8],
+          [0, 4, 8],
+          [2, 4, 6],
+        ];
+        return winPatterns.some((pattern) => {
+          const [a, b, c] = pattern;
+          if (
+            gameState[a] &&
+            gameState[a] === gameState[b] &&
+            gameState[a] === gameState[c]
+          ) {
+            pattern.forEach((i) => cells[i].classList.add("won"));
+            return true;
+          }
+          return false;
+        });
+      }
+
+      function endGame(message) {
+        alert(message);
+        gameActive = false;
+      }
+
+      function resetGame() {
+        gameState.fill(null);
+        cells.forEach((cell) => {
+          cell.textContent = "";
+          cell.classList.remove("won");
+        });
+        gameActive = true;
+        currentPlayer = "X";
+      }
+    </script>
+  </body>
+</html>

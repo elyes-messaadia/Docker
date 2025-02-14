@@ -1,0 +1,86 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+.App-header {
+  background-color: #003f8c;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+.fa-brands {
+  padding: 20px;
+  font-size: 30px;
+  width: 50px;
+  margin: 10px;
+  text-align: center;
+  text-decoration: none;
+}
+
+.fa-brands:hover {
+  opacity: 0.7;
+}
+
+/* Twitter */
+.fa-x-twitter {
+  background: #8b0000;
+  color: white;
+}
+
+/* Linkedin */
+.fa-linkedin {
+  background: #8b0000;
+  color: white;
+}
+
+/* Reddit */
+.fa-reddit {
+  background: #8b0000;
+  color: white;
+}
+
+.dark-theme {
+  background-color: #1a0505;
+  color: #ffffff;
+}
+
+.dark-theme .App-header {
+  background-color: #2d0a0a;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #ff9999;
+}
+
+.dark-theme h1 {
+  color: #ff3333;
+  text-shadow: 0 0 10px #ff0000;
+}
+
+.dark-theme a {
+  color: #ff6666;
+  margin: 0 10px;
+  font-size: 2em;
+  text-decoration: none;
+}
+
+.dark-theme a:hover {
+  color: #ff3333;
+  text-shadow: 0 0 5px #ff0000;
+}

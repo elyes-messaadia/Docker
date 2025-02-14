@@ -1,0 +1,54 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+.App-header {
+  background-color: #e28718;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: rgb(228, 21, 21);
+}
+
+.App-link {
+  color: #8cb716;
+}
+
+.fa-brands {
+  padding: 20px;
+  font-size: 30px;
+  width: 50px;
+  margin: 10px;
+  text-align: center;
+  text-decoration: none;
+}
+
+.fa-brands:hover {
+  opacity: 0.7;
+}
+
+/* Twitter */
+.fa-x-twitter {
+  background: #010c13;
+  color: white;
+}
+
+/* Linkedin */
+.fa-linkedin {
+  background: #0a8aec;
+  color: white;
+}
+
+/* Reddit */
+.fa-reddit {
+  background: #e14c0c;
+  color: white;
+}
